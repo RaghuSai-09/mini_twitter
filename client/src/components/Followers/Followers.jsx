@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import * as api from '../../../api';
-import { Link, useHistory } from 'react-router-dom';
+
+import { useNavigate } from 'react-router';
 
 const Followers = () => {
   const [loading, setLoading] = useState(false);
   const [following, setFollowing] = useState([]);
   const [followusers, setFollowUsers] = useState([]);
-  const history = useHistory();
-
+  const history = useNavigate();
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -16,7 +16,7 @@ const Followers = () => {
     try {
       const response = await api.getusers();
       const allusers = response.data.allusers;
-      const followingResponse = await api.get('/users/followlist'); 
+      const followingResponse = await api.user('/users/followlist'); 
       const followingList = followingResponse.data.followingList.map(
         (user) => user._id
       );
@@ -60,7 +60,7 @@ const Followers = () => {
   };
 
   const handleProfileClick = (id) => {
-    history.push(`/profile/${id}`);
+    history(`/profile/${id}`);
   };
 
   return (

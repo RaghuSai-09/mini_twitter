@@ -7,8 +7,9 @@ exports.createPost = async (req, res) => {
     try {
       const { content } = req.body;
       const author = req.user._id; 
+      const author_name = req.user.name;
   
-      const post = new Post({ content, author });
+      const post = new Post({ content, author, author_name });
       await post.save();
   
       res.status(201).json({ message: 'Post created successfully', post });

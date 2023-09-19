@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Post = require('../models/Post');
 const {requireAuth} = require('../middlewares/controller');
 const { createPost, updatePost, deletePost } = require('./PostRoutes');
 
@@ -12,10 +13,9 @@ router.post('/login', async (req, res) => {
   
     try {
       const user = await User.findOne({ email });
-  
+      console.log(user);
       if (!user) {
-        return res.status(404).json({
-          status: 'fail',
+        return res.status(401).json({
           message: 'User not found',
         });
       }
@@ -24,7 +24,6 @@ router.post('/login', async (req, res) => {
   
       if (!isMatch) {
         return res.status(400).json({
-          status: 'fail',
           message: 'Incorrect password',
         });
       }
@@ -36,14 +35,13 @@ router.post('/login', async (req, res) => {
       );
   
       res.status(200).json({
-        status: 'success',
         token,
         user,
       });
     } catch (error) {
       console.error(error);
       res.status(500).json({
-        status: 'fail',
+  
         message: 'Login failed. Please try again later.',
       });
     }
@@ -57,7 +55,6 @@ router.post('/login', async (req, res) => {
   
       if (existingUser) {
         return res.status(400).json({
-          status: 'fail',
           message: 'User already exists',
         });
       }
@@ -77,7 +74,6 @@ router.post('/login', async (req, res) => {
       );
   
       res.status(200).json({
-        status: 'success',
         token,
         user,
       });
@@ -162,7 +158,50 @@ router.get('/followlist', requireAuth, async(req, res) => {
         });
       }
 });
-    
+
+router.get('/tweets', requireAuth, async(req, res) => {
+    try {
+        const tweets = await Post.find({ author: req.user._id });
+        const followerTweets = await Post.find({ author: { $in: req.user.following } });  
+        // const allTweets = [...tweets, ...followerTweets];
+          res.status(200).json({
+            status: 'success',
+            tweets: followerTweets,
+          });
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            message: error.message
+        });
+    }
+});
+
+
+router.get('/:id', requireAuth, async(req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
+      
+      if (!user) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'User not found',
+        });
+      }
+      
+      res.status(200).json({
+        status: 'success',
+        user,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        status: 'fail',
+        message: error.message,
+      });
+    }
+  });
+
+
 router.post('/create', requireAuth, createPost);
 
 router.put('/:postId', requireAuth, updatePost);

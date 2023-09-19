@@ -9,7 +9,7 @@ const requireAuth = async (req, res, next) => {
 
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decodedToken);
+    // console.log(decodedToken);
     const user = await User.findById(decodedToken._id);
 
     if (!user) {

@@ -1,6 +1,8 @@
 import Sidebar from "./Sidebar";
 
 function ProfilePage() {
+
+  const user = JSON.parse(localStorage.getItem('user'));
   return (
     <div className="flex justify-center">
       <Sidebar />
@@ -8,7 +10,7 @@ function ProfilePage() {
         <div className="flex items-center mb-4">
           
           <div>
-            <h2 className="text-2xl font-semibold">hi</h2>
+            <h2 className="text-2xl font-semibold">hi,{user.name}</h2>
            
           </div>
         </div>

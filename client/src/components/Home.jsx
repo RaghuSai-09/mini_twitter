@@ -20,38 +20,42 @@ function Home() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await api.login({ email, password });
-    console.log(res);
+    
     try {
+      const res = await api.login({ email, password });
       if (res.status === 200) {
         localStorage.setItem('token', res.data.token);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
         alert('Login Success');
         login();
         navigate('/home');
       } else if (res.status === 404) {
-        setLoginError(res.data.message || 'User Not Found');
+        setLoginError('User Not Found');
+        alert('User Not Found')
       } else if (res.status === 400) {
+        alert('Incorrect password')
         setLoginError('Incorrect password');
       }
     } catch (error) {
-      setLoginError(res.message || 'Login Failed');
+      window.alert('Login Failed');
+      setLoginError(error.response.data.message);
       console.error(error);
     }
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const res = await api.signup({ name, email, password });
     try {
+      const res = await api.signup({ name, email, password });
       if (res.status === 200) {
         localStorage.setItem('token', res.data.token);
         alert('Signup Success, Login Now!');
         navigate('/');
-      } else if (res.status === 400) {
+      } else if (res.status === 400 ) {
         setSignupError(res.message || 'User already exists');
       }
     } catch (error) {
-      setSignupError(res.data.message||'Signup Failed');
+      setSignupError(error.response.data.message||'Signup Failed');
       console.error(error);
     }
   };

@@ -25,6 +25,7 @@ export const login = payload => api.post('/users/login', payload);
 export const signup = payload => api.post('/users/signup', payload); 
 export const getTweets = () => api.get('/users/tweets');
 export const getusers = () => api.get('/users/all');
+export const getuser = payload => api.get(`/users/${payload}`);
 export const follow = payload => api.put(`/users/follow/`,payload);
 export const user = payload => api.get(`/users/followlist/`,payload);
 export const createTweet = payload => api.post('/users/create', payload);

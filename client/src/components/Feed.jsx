@@ -1,6 +1,6 @@
 import  { useState, useEffect } from 'react';
 import PostCreationForm from './PostCreation';
-// import Post from './Post'; 
+import Post from './Post'; 
 import * as api from '../../api';
 
 function Feed() {
@@ -8,7 +8,7 @@ function Feed() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    
+
     fetchTweets();
   }, []);
 
@@ -16,7 +16,7 @@ function Feed() {
     setLoading(true);
     try {
       const response = await api.getTweets();
-      setTweets(response.data);
+      setTweets(response.data.tweets);
     } catch (error) {
       console.error('Error fetching tweets:', error);
     } finally {
@@ -26,9 +26,10 @@ function Feed() {
 
   const handleNewPost = async (content) => {
     try {
-      const response = await api.createTweet({content}); 
-      const newTweet = response.data;
-      setTweets([newTweet, ...tweets]);
+      const response = await api.createTweet({content});
+      if(response.status === 201){
+        fetchTweets();
+      }
     } catch (error) {
       console.error('Error creating tweet:', error);
     }
@@ -45,7 +46,18 @@ function Feed() {
           <p>Loading tweets...</p>
         ) : (
           tweets.map((tweet) => (
-            <Post key={tweet.id} tweet={tweet} />
+            <div key={tweet._id} className="bg-white p-4 my-4 rounded-lg shadow-md">
+              <div className="flex items-center">
+                <div className="h-10 w-10 bg-gray-300 rounded-full overflow-hidden">
+                  <img src={"author.profilePictureUrl"} alt={"author.username"} className="object-cover h-full w-full" />
+                </div>
+              <div className="ml-2">
+                <h2 className="text-lg font-semibold">{tweet.author_name}</h2>
+                <p className="text-gray-600 text-sm">{tweet.content}</p>
+                <p className="text-gray-600 text-sm">{new Date(tweet.createdAt).toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
           ))
         )}
       </div>
