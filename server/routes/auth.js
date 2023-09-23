@@ -163,7 +163,6 @@ router.get('/tweets', requireAuth, async(req, res) => {
     try {
         const tweets = await Post.find({ author: req.user._id });
         const followerTweets = await Post.find({ author: { $in: req.user.following } });  
-        // const allTweets = [...tweets, ...followerTweets];
           res.status(200).json({
             status: 'success',
             tweets: followerTweets,
@@ -180,7 +179,7 @@ router.get('/tweets', requireAuth, async(req, res) => {
 router.get('/:id', requireAuth, async(req, res) => {
     try {
       const user = await User.findById(req.params.id);
-      
+      const tweets = await Post.find({ author: req.params.id });
       if (!user) {
         return res.status(404).json({
           status: 'fail',
@@ -191,6 +190,7 @@ router.get('/:id', requireAuth, async(req, res) => {
       res.status(200).json({
         status: 'success',
         user,
+        tweets
       });
     } catch (error) {
       console.error(error);

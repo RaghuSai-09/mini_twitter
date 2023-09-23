@@ -75,7 +75,7 @@ const Followers = () => {
           followusers.map((user) => (
             <div
               key={user._id}
-              className="flex flex-row justify-between cursor-pointer"
+              className="flex flex-row justify-between "
               onClick={() => handleProfileClick(user._id)}
             >
               <div className="flex flex-row mt-5">
@@ -84,8 +84,8 @@ const Followers = () => {
                   alt=""
                   className="w-12 h-10 rounded-full mr-2"
                 />
-                <div className="flex flex-col">
-                  <p className="font-bold">{user.name}</p>
+                <div className="flex flex-col ">
+                  <p className="font-bold cursor-pointer">{user.name}</p>
                   <p className="text-gray-500">{user.email}</p>
                 </div>
               </div>

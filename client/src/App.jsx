@@ -4,7 +4,6 @@ import HomePage from './components/HomePage.jsx';
 import { AuthProvider } from '../utils/auth';
 import Auth from '../utils/controller';
 import Profile from './components/Profile.jsx';
-import Post from './components/Post';
 import User from './components/Profiles/User.jsx';
 
 function App() {
@@ -15,7 +14,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Auth><HomePage /></Auth>} />
           <Route path="/profile" element={<Auth> <Profile /></Auth>} />
-          <Route path='/profile/:id' element={<User/>}/>
+          <Route path='/profile/:id' element={<Auth><User /></Auth>}/>
         </Routes>
       </Router>
     </AuthProvider>

@@ -28,4 +28,5 @@ export const getusers = () => api.get('/users/all');
 export const getuser = payload => api.get(`/users/${payload}`);
 export const follow = payload => api.put(`/users/follow/`,payload);
 export const user = payload => api.get(`/users/followlist/`,payload);
+export const unfollow = payload => api.put(`/users/unfollow/`,payload);
 export const createTweet = payload => api.post('/users/create', payload);
